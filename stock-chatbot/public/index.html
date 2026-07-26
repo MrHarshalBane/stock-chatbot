@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Nifty & Sensex AI Chatbot</title>
+    <meta name="description" content="Get live Nifty 50 and BSE Sensex stock market data, interactive charts, and AI analysis from our smart financial chatbot.">
+    <!-- Google Fonts (Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h1>MarketBot <span class="badge">Live</span></h1>
+            </div>
+            <div class="connection-status">
+                <span class="pulse-indicator status-green" id="connection-indicator"></span>
+                <span id="connection-text">Live Connection</span>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT (Split Screen) -->
+        <main class="app-body">
+            <!-- LEFT PANEL: CHAT INTERFACE -->
+            <section class="chat-panel" aria-label="Chat Interface">
+                <div class="chat-messages" id="chat-messages-container">
+                    <!-- Initial Bot Message -->
+                    <div class="message bot-message">
+                        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                        <div class="message-bubble">
+                            <p>Hello! I am your MarketBot assistant. I track the live prices of **NIFTY 50** and **SENSEX**.</p>
+                            <p>You can ask me questions like:</p>
+                            <ul>
+                                <li>"What is the Nifty price?"</li>
+                                <li>"Is Sensex up or down today?"</li>
+                                <li>"Show me the chart for Nifty 50"</li>
+                                <li>"Compare both index performances"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="quick-actions-container">
+                    <button class="quick-action-btn" id="qa-nifty-price">
+                        <i class="fa-solid fa-indian-rupee-sign"></i> Nifty Price
+                    </button>
+                    <button class="quick-action-btn" id="qa-sensex-price">
+                        <i class="fa-solid fa-indian-rupee-sign"></i> Sensex Price
+                    </button>
+                    <button class="quick-action-btn" id="qa-compare">
+                        <i class="fa-solid fa-right-left"></i> Compare
+                    </button>
+                    <button class="quick-action-btn" id="qa-trend">
+                        <i class="fa-solid fa-arrow-trend-up"></i> Market Trend
+                    </button>
+                </div>
+
+                <!-- CHAT INPUT -->
+                <form class="chat-input-form" id="chat-input-form">
+                    <input type="text" id="chat-user-input" placeholder="Ask about Nifty or Sensex live prices..." autocomplete="off" required>
+                    <button type="submit" class="send-btn" id="chat-send-btn" aria-label="Send Message">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </section>
+
+            <!-- RIGHT PANEL: MARKET DASHBOARD -->
+            <section class="dashboard-panel" aria-label="Market Dashboard">
+                <!-- TICKER CARDS -->
+                <div class="tickers-grid">
+                    <!-- NIFTY CARD -->
+                    <div class="ticker-card" id="card-nifty">
+                        <div class="ticker-header">
+                            <div class="ticker-info">
+                                <span class="ticker-symbol">NIFTY 50</span>
+                                <span class="ticker-exchange">NSE India</span>
+                            </div>
+                            <div class="ticker-status-dot pulse-indicator"></div>
+                        </div>
+                        <div class="ticker-body">
+                            <div class="ticker-price" id="nifty-price">--.--</div>
+                            <div class="ticker-change" id="nifty-change">
+                                <span>--.-- (--.--%)</span>
+                            </div>
+                        </div>
+                        <!-- Sparkline SVG -->
+                        <div class="sparkline-container" id="nifty-sparkline">
+                            <!-- SVG Path injected dynamically -->
+                        </div>
+                        <!-- High/Low Info -->
+                        <div class="ticker-footer">
+                            <div class="footer-stat">
+                                <span class="stat-label">L</span>
+                                <span class="stat-val" id="nifty-low">--.--</span>
+                            </div>
+                            <div class="range-bar">
+                                <div class="range-progress" id="nifty-range-progress"></div>
+                            </div>
+                            <div class="footer-stat">
+                                <span class="stat-label">H</span>
+                                <span class="stat-val" id="nifty-high">--.--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SENSEX CARD -->
+                    <div class="ticker-card" id="card-sensex">
+                        <div class="ticker-header">
+                            <div class="ticker-info">
+                                <span class="ticker-symbol">SENSEX</span>
+                                <span class="ticker-exchange">BSE India</span>
+                            </div>
+                            <div class="ticker-status-dot pulse-indicator"></div>
+                        </div>
+                        <div class="ticker-body">
+                            <div class="ticker-price" id="sensex-price">--.--</div>
+                            <div class="ticker-change" id="sensex-change">
+                                <span>--.-- (--.--%)</span>
+                            </div>
+                        </div>
+                        <!-- Sparkline SVG -->
+                        <div class="sparkline-container" id="sensex-sparkline">
+                            <!-- SVG Path injected dynamically -->
+                        </div>
+                        <!-- High/Low Info -->
+                        <div class="ticker-footer">
+                            <div class="footer-stat">
+                                <span class="stat-label">L</span>
+                                <span class="stat-val" id="sensex-low">--.--</span>
+                            </div>
+                            <div class="range-bar">
+                                <div class="range-progress" id="sensex-range-progress"></div>
+                            </div>
+                            <div class="footer-stat">
+                                <span class="stat-label">H</span>
+                                <span class="stat-val" id="sensex-high">--.--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAIN CHART CARD -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title-group">
+                            <h2 id="chart-index-title">NIFTY 50</h2>
+                            <span class="time-range">Intraday (5m)</span>
+                        </div>
+                        <div class="chart-tabs">
+                            <button class="chart-tab active" id="tab-nifty">NIFTY 50</button>
+                            <button class="chart-tab" id="tab-sensex">SENSEX</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                        <div class="chart-loading" id="chart-loading-overlay">
+                            <div class="spinner"></div>
+                            <span>Fetching live chart data...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
